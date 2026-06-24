@@ -15,10 +15,6 @@ class File{
     }
 
 };
-class Folder{
-    private:
-    string foldername;
-};
 class FileManager{
     private:
     vector<File> files;
