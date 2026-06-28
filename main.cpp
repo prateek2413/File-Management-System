@@ -81,16 +81,6 @@ class FileManager{
         files.push_back(newFile);
         cout<<"\nFile Added Successfully!\n";
     }
-    void displayFiles(){
-        if(files.empty()){
-            cout<<"\nNo Files Available.\n";
-            return;
-        }
-        cout<<"\n==== FILE LIST ====\n";
-        for(int i=0;i<files.size();i++){
-            cout<<"ID: "<<files[i].id<<" | Name: "<<files[i].name<<" | Size: "<<files[i].size<<"KB"<<endl;
-        }
-    }
     void searchFile(){
         if(files.empty()){
             cout<<"\nNo Files Available to Search.\n";
@@ -113,6 +103,40 @@ class FileManager{
         }
         cout<<"\nFile with ID "<<searchId<<" not found.\n";
     }
+    void deleteFile(){
+        if(files.empty()){
+            cout<<"\nNo Files Available to Delete.\n";
+            return;
+        }
+        int deleteId;
+        cout<<"\nEnter File ID to Delete: ";
+        cin>>deleteId;
+        if(cin.fail()){
+            cout<<"Invalid ID! Enter a number only.\n";
+            cin.clear();
+            cin.ignore(1000,'\n');
+            return;
+        }
+        cin.ignore(1000,'\n');
+        for(int i=0;i<files.size();i++){
+            if(files[i].id=deleteId){
+                files.erase(files.begin()+i);
+                cout<<"\nFile with ID "<<deleteId<<" deleted successfully!\n";
+                return;
+            }
+        }
+        cout<<"\nFile with ID "<<deleteId<<" not Found.\n";
+    }
+    void displayFiles(){
+        if(files.empty()){
+            cout<<"\nNo Files Available.\n";
+            return;
+        }
+        cout<<"\n==== FILE LIST ====\n";
+        for(int i=0;i<files.size();i++){
+            cout<<"ID: "<<files[i].id<<" | Name: "<<files[i].name<<" | Size: "<<files[i].size<<"KB"<<endl;
+        }
+    }
 
 };
 int main(){
@@ -124,7 +148,8 @@ int main(){
         cout<< "1.Add File\n";
         cout<<"2.Display Files\n";
         cout<<"3.Search File\n";
-        cout<<"4.Exit\n";
+        cout<<"4.Delete File\n";
+        cout<<"5.Exit\n";
 
         while(true){
             cout<<"Enter Choice: ";
@@ -149,12 +174,15 @@ int main(){
             fm.searchFile();
             break;
             case 4:
+            fm.deleteFile();
+            break;
+            case 5:
             cout<<"\nExiting Program...";
             break;
             default:
             cout<<"Invalid Choice!\n";
         }
-    }while(choice!=4);
+    }while(choice!=5);
     return 0;
 }
 
