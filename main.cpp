@@ -49,7 +49,7 @@ class FileManager{
             break;
         }
         
-        cin.ignore();
+        cin.ignore(1000, '\n');
         while(true){
             cout<<"Enter File name: ";
             getline(cin, name);
@@ -57,6 +57,7 @@ class FileManager{
                 break;
             }
             cout<<"Name of File cannot be Empty\n";
+
         }
 
         while(true){
@@ -67,6 +68,11 @@ class FileManager{
                 cin.clear();
                 cin.ignore(1000,'\n');
                 continue;
+            }
+            if(size<0){
+                cout<<"Size of file can't be negative\n";
+                continue;
+
             }
             break;
         }
@@ -85,6 +91,28 @@ class FileManager{
             cout<<"ID: "<<files[i].id<<" | Name: "<<files[i].name<<" | Size: "<<files[i].size<<"KB"<<endl;
         }
     }
+    void searchFile(){
+        if(files.empty()){
+            cout<<"\nNo Files Available to Search.\n";
+            return;
+        }
+        int searchId;
+        cout<<"\nEnter File ID to search: ";
+        cin>>searchId;
+        if(cin.fail()){
+            cout<<"Invalid ID! Enter a Number only.\n";
+            cin.clear();
+            cin.ignore(1000,'\n');
+            return;
+        }
+        for(int i=0;i<files.size();i++){
+            if(files[i].id==searchId){
+                cout<<"\nFile Found!\n"<<"ID: "<<files[i].id<<" | Name: "<<files[i].name<<" | Size: "<<files[i].size<<"KB"<<endl;
+                return;
+            }
+        }
+        cout<<"\nFile with ID "<<searchId<<" not found.\n";
+    }
 
 };
 int main(){
@@ -95,7 +123,8 @@ int main(){
         cout<<"\n==== SMART FILE MANAGER ====\n";
         cout<< "1.Add File\n";
         cout<<"2.Display Files\n";
-        cout<<"3.Exit\n";
+        cout<<"3.Search File\n";
+        cout<<"4.Exit\n";
 
         while(true){
             cout<<"Enter Choice: ";
@@ -117,12 +146,15 @@ int main(){
             fm.displayFiles();
             break;
             case 3:
+            fm.searchFile();
+            break;
+            case 4:
             cout<<"\nExiting Program...";
             break;
             default:
             cout<<"Invalid Choice!\n";
         }
-    }while(choice!=3);
+    }while(choice!=4);
     return 0;
 }
 
