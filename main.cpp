@@ -119,7 +119,7 @@ class FileManager{
         }
         cin.ignore(1000,'\n');
         for(int i=0;i<files.size();i++){
-            if(files[i].id=deleteId){
+            if(files[i].id==deleteId){
                 files.erase(files.begin()+i);
                 cout<<"\nFile with ID "<<deleteId<<" deleted successfully!\n";
                 return;
@@ -137,6 +137,46 @@ class FileManager{
             cout<<"ID: "<<files[i].id<<" | Name: "<<files[i].name<<" | Size: "<<files[i].size<<"KB"<<endl;
         }
     }
+    void sortByName(){
+        if(files.empty()){
+            cout<<"\nNo Files Available for Sort. \n";
+            return;
+        }
+        for(int i=0;i<files.size()-1;i++){
+            bool swapped=false;
+            for(int j=0;j<files.size()-i-1;j++){
+                if(files[j].name>files[j+1].name){
+                    swap(files[j],files[j+1]);
+                    swapped=true;
+                }
+            }
+            if(!swapped){
+                break;
+            }
+        }
+        cout<<"\nFiles sorted by Name successfully!\n";
+        displayFiles();
+    }
+    void sortBySize(){
+        if(files.empty()){
+            cout<<"\nNo Files Available to sort.\n";
+            return;
+        }        
+        for(int i=0;i<files.size()-1;i++){
+            bool swapped=false;
+            for(int j=0;j<files.size()-i-1;j++){
+                if(files[j].size>files[j+1].size){
+                    swap(files[j],files[j+1]);
+                    swapped=true;
+                }
+            }
+            if(!swapped){
+                break;
+            }
+        }
+        cout<<"\nFiles sorted by Size successfully.\n";
+        displayFiles();
+    }
 
 };
 int main(){
@@ -149,7 +189,9 @@ int main(){
         cout<<"2.Display Files\n";
         cout<<"3.Search File\n";
         cout<<"4.Delete File\n";
-        cout<<"5.Exit\n";
+        cout<<"5.Sort by Name\n";
+        cout<<"6.Sort by Size\n";
+        cout<<"7.Exit\n";
 
         while(true){
             cout<<"Enter Choice: ";
@@ -177,12 +219,17 @@ int main(){
             fm.deleteFile();
             break;
             case 5:
+            fm.sortByName();
+            break;
+            case 6:
+            fm.sortBySize();
+            case 7:
             cout<<"\nExiting Program...";
             break;
             default:
             cout<<"Invalid Choice!\n";
         }
-    }while(choice!=5);
+    }while(choice!=7);
     return 0;
 }
 
