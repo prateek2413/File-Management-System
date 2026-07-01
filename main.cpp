@@ -142,9 +142,10 @@ class FileManager{
             cout<<"\nNo Files Available for Sort. \n";
             return;
         }
-        for(int i=0;i<files.size()-1;i++){
+        int n=files.size();
+        for(int i=0;i<n-1;i++){
             bool swapped=false;
-            for(int j=0;j<files.size()-i-1;j++){
+            for(int j=0;j<n-i-1;j++){
                 if(files[j].name>files[j+1].name){
                     swap(files[j],files[j+1]);
                     swapped=true;
@@ -161,10 +162,11 @@ class FileManager{
         if(files.empty()){
             cout<<"\nNo Files Available to sort.\n";
             return;
-        }        
-        for(int i=0;i<files.size()-1;i++){
+        }
+        int n=files.size();        
+        for(int i=0;i<n-1;i++){
             bool swapped=false;
-            for(int j=0;j<files.size()-i-1;j++){
+            for(int j=0;j<n-i-1;j++){
                 if(files[j].size>files[j+1].size){
                     swap(files[j],files[j+1]);
                     swapped=true;
