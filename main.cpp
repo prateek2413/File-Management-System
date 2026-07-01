@@ -2,6 +2,7 @@
 #include<vector>
 #include<string>
 #include<limits>
+#include<unordered_map>
 using namespace std;
 class File{
     public:
@@ -18,15 +19,16 @@ class File{
 class FileManager{
     private:
     vector<File> files;
+    unordered_map<int, int> idIndex;
     public:
     bool idExists(int id){
-        for(int i = 0; i < files.size(); i++)
-        {
-            if(files[i].id == id){
-                return true;
-            }
+        return idIndex.find(id)!=idIndex.end();
+    }
+    void rebuildIndex(){
+        idIndex.clear();
+        for(int i=0;i<files.size();i++){
+            idIndex[files[i].id]=i;
         }
-        return false;
     }
     void addFile(){
         int id;
@@ -79,6 +81,7 @@ class FileManager{
 
         File newFile(id, name, size);
         files.push_back(newFile);
+        idIndex[id]=files.size()-1;
         cout<<"\nFile Added Successfully!\n";
     }
     void searchFile(){
@@ -95,13 +98,13 @@ class FileManager{
             cin.ignore(1000,'\n');
             return;
         }
-        for(int i=0;i<files.size();i++){
-            if(files[i].id==searchId){
-                cout<<"\nFile Found!\n"<<"ID: "<<files[i].id<<" | Name: "<<files[i].name<<" | Size: "<<files[i].size<<"KB"<<endl;
-                return;
-            }
+        auto it=idIndex.find(searchId);
+        if(it!=idIndex.end()){
+            int pos=it->second;
+            cout<<"\nFile Found!\n"<<files[pos].id<<" | Name: "<<files[pos].name<<" | Size: "<<files[pos].size<<"KB"<<endl;
+        }else{
+            cout<<"\nFile with ID "<<searchId<<" not Fund.";
         }
-        cout<<"\nFile with ID "<<searchId<<" not found.\n";
     }
     void deleteFile(){
         if(files.empty()){
@@ -118,14 +121,22 @@ class FileManager{
             return;
         }
         cin.ignore(1000,'\n');
-        for(int i=0;i<files.size();i++){
-            if(files[i].id==deleteId){
-                files.erase(files.begin()+i);
-                cout<<"\nFile with ID "<<deleteId<<" deleted successfully!\n";
-                return;
+        
+        auto it = idIndex.find(deleteId);
+        if(it==idIndex.end()){
+            cout<<"\nFile with ID "<<deleteId<<" not Found.\n";
+            return;
+        }
+        int pos=it->second;
+        files.erase(files.begin()+pos);
+        idIndex.erase(it);
+        for(auto &pair : idIndex){
+            if(pair.second>pos){
+                pair.second--;
             }
         }
-        cout<<"\nFile with ID "<<deleteId<<" not Found.\n";
+        cout<<"\nFile with ID "<<deleteId<<" deleted successfully!\n";
+
     }
     void displayFiles(){
         if(files.empty()){
@@ -156,6 +167,7 @@ class FileManager{
             }
         }
         cout<<"\nFiles sorted by Name successfully!\n";
+        rebuildIndex();
         displayFiles();
     }
     void sortBySize(){
@@ -177,6 +189,7 @@ class FileManager{
             }
         }
         cout<<"\nFiles sorted by Size successfully.\n";
+        rebuildIndex();
         displayFiles();
     }
 
@@ -225,6 +238,7 @@ int main(){
             break;
             case 6:
             fm.sortBySize();
+            break;
             case 7:
             cout<<"\nExiting Program...";
             break;
@@ -234,4 +248,5 @@ int main(){
     }while(choice!=7);
     return 0;
 }
+
 
