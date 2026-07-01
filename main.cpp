@@ -3,6 +3,7 @@
 #include<string>
 #include<limits>
 #include<unordered_map>
+#include<queue>
 using namespace std;
 class File{
     public:
@@ -20,6 +21,8 @@ class FileManager{
     private:
     vector<File> files;
     unordered_map<int, int> idIndex;
+    queue<File> recentFiles;
+    const int RECENT_LIMIT=5;
     public:
     bool idExists(int id){
         return idIndex.find(id)!=idIndex.end();
@@ -28,6 +31,12 @@ class FileManager{
         idIndex.clear();
         for(int i=0;i<files.size();i++){
             idIndex[files[i].id]=i;
+        }
+    }
+    void addToRecent(File f){
+        recentFiles.push(f);
+        if(recentFiles.size()>RECENT_LIMIT){
+            recentFiles.pop();
         }
     }
     void addFile(){
@@ -82,6 +91,7 @@ class FileManager{
         File newFile(id, name, size);
         files.push_back(newFile);
         idIndex[id]=files.size()-1;
+        addToRecent(newFile);
         cout<<"\nFile Added Successfully!\n";
     }
     void searchFile(){
@@ -192,6 +202,19 @@ class FileManager{
         rebuildIndex();
         displayFiles();
     }
+    void showRecentFiles(){
+        if(recentFiles.empty()){
+            cout<<"\nNo Recent Files.\n";
+            return;
+        }
+        queue<File> temp=recentFiles;
+        cout<<"\n==== RECENT FILES (Oldest to Newest) ====\n";
+        while(!temp.empty()){
+            File f=temp.front();
+            cout<<"ID: "<<f.id<<" | Name: "<<f.name<<" | Size: "<<f.size<<"KB"<<endl;
+            temp.pop();
+        }
+    }
 
 };
 int main(){
@@ -206,7 +229,8 @@ int main(){
         cout<<"4.Delete File\n";
         cout<<"5.Sort by Name\n";
         cout<<"6.Sort by Size\n";
-        cout<<"7.Exit\n";
+        cout<<"7.View Recent Files\n";
+        cout<<"8.Exit\n";
 
         while(true){
             cout<<"Enter Choice: ";
@@ -240,12 +264,15 @@ int main(){
             fm.sortBySize();
             break;
             case 7:
+            fm.showRecentFiles();
+            break;
+            case 8:
             cout<<"\nExiting Program...";
             break;
             default:
             cout<<"Invalid Choice!\n";
         }
-    }while(choice!=7);
+    }while(choice!=8);
     return 0;
 }
 
